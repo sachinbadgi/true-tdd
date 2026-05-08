@@ -10,7 +10,13 @@
 
 ## Phase 2: Deterministic Traceability
 
-- `[ ]` Task 8: `graph_analyzer.py` implementation
-- `[ ]` Task 9: `graph_analyzer` unit tests
-- `[ ]` Task 10: `report.py` CLI updates for 3-tier traceability
-- `[ ]` Task 11: End-to-end verification in `example` project
+- `[x]` Task 8: `graph_analyzer.py` implementation
+- `[x]` Task 9: `graph_analyzer` unit tests
+- `[x]` Task 10: `report.py` CLI updates for 3-tier traceability
+- `[x]` Task 11: End-to-end verification in `example` project
+
+## Phase 3: Agentic TDD Loop
+
+- `[x]` Task 12: Add `--json-out` flag to `report.py`
+- `[x]` Task 13: Create `.agents/workflows/autotest-loop.md`
+- `[x]` Task 14: Run the loop to fix REQ-203

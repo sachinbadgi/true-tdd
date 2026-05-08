@@ -14,4 +14,10 @@ def test_divide_by_zero_raises():
     with pytest.raises(ValueError):
         divide(10, 0)
 
-# REQ-203 intentionally left untagged to demonstrate UNTESTED status
+@pytest.mark.requirement("REQ-203")
+def test_multiply_positive():
+    assert multiply(3, 4) == 12
+
+@pytest.mark.requirement("REQ-202")
+def test_divide_normal():
+    assert divide(10, 2) == 5.0

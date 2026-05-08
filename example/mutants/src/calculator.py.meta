@@ -1,35 +1,36 @@
 {
     "exit_code_by_key": {
-        "calculator.x_add__mutmut_1": 1,
-        "calculator.x_divide__mutmut_1": 1,
-        "calculator.x_divide__mutmut_2": 1,
-        "calculator.x_divide__mutmut_3": 0,
-        "calculator.x_divide__mutmut_4": 0,
-        "calculator.x_divide__mutmut_5": 0,
-        "calculator.x_divide__mutmut_6": 0,
-        "calculator.x_divide__mutmut_7": 0,
-        "calculator.x_multiply__mutmut_1": 33
+        "calculator.x_add__mutmut_1": -11,
+        "calculator.x_divide__mutmut_1": -11,
+        "calculator.x_divide__mutmut_2": -11,
+        "calculator.x_divide__mutmut_3": -11,
+        "calculator.x_divide__mutmut_4": -11,
+        "calculator.x_divide__mutmut_5": -11,
+        "calculator.x_divide__mutmut_6": -11,
+        "calculator.x_divide__mutmut_7": -11,
+        "calculator.x_multiply__mutmut_1": -11
     },
     "durations_by_key": {
-        "calculator.x_divide__mutmut_2": 0.093593,
-        "calculator.x_divide__mutmut_1": 0.09529,
-        "calculator.x_divide__mutmut_3": 0.097336,
-        "calculator.x_divide__mutmut_4": 0.097371,
-        "calculator.x_divide__mutmut_5": 0.096998,
-        "calculator.x_divide__mutmut_6": 0.097792,
-        "calculator.x_divide__mutmut_7": 0.097719,
-        "calculator.x_add__mutmut_1": 0.097095
+        "calculator.x_multiply__mutmut_1": 0.103429,
+        "calculator.x_divide__mutmut_1": 0.19884,
+        "calculator.x_divide__mutmut_2": 0.294367,
+        "calculator.x_divide__mutmut_3": 0.392909,
+        "calculator.x_divide__mutmut_4": 0.500731,
+        "calculator.x_divide__mutmut_5": 0.611748,
+        "calculator.x_divide__mutmut_6": 0.716974,
+        "calculator.x_divide__mutmut_7": 0.817786,
+        "calculator.x_add__mutmut_1": 0.9199
     },
     "type_check_error_by_key": {},
     "estimated_durations_by_key": {
-        "calculator.x_multiply__mutmut_1": 0,
-        "calculator.x_divide__mutmut_1": 0.00019066594541072845,
-        "calculator.x_divide__mutmut_2": 0.00019066594541072845,
-        "calculator.x_divide__mutmut_3": 0.00019066594541072845,
-        "calculator.x_divide__mutmut_4": 0.00019066594541072845,
-        "calculator.x_divide__mutmut_5": 0.00019066594541072845,
-        "calculator.x_divide__mutmut_6": 0.00019066594541072845,
-        "calculator.x_divide__mutmut_7": 0.00019066594541072845,
-        "calculator.x_add__mutmut_1": 0.0005902090924791992
+        "calculator.x_multiply__mutmut_1": 0.00015033403178676963,
+        "calculator.x_divide__mutmut_1": 0.00037862290628254414,
+        "calculator.x_divide__mutmut_2": 0.00037862290628254414,
+        "calculator.x_divide__mutmut_3": 0.00037862290628254414,
+        "calculator.x_divide__mutmut_4": 0.00037862290628254414,
+        "calculator.x_divide__mutmut_5": 0.00037862290628254414,
+        "calculator.x_divide__mutmut_6": 0.00037862290628254414,
+        "calculator.x_divide__mutmut_7": 0.00037862290628254414,
+        "calculator.x_add__mutmut_1": 0.001020957948639989
     }
 }

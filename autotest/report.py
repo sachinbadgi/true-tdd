@@ -63,7 +63,8 @@ def compute_reliability(requirements: List[Dict], store: Dict, graph_analysis: D
 @click.option("--store", default="traceability_store.json", help="Path to traceability store")
 @click.option("--graph", default=None, help="Path to Graphify graph.json for structural analysis")
 @click.option("--threshold", default=90.0, help="Minimum reliability % to pass")
-def cli(prd, store, graph, threshold):
+@click.option("--json-out", default=None, help="Path to output machine-readable validation matrix JSON")
+def cli(prd, store, graph, threshold, json_out):
     requirements = parse_prd_file(prd)
     store_data = (
         json.loads(Path(store).read_text())
@@ -112,6 +113,18 @@ def cli(prd, store, graph, threshold):
                 print(f"  {icons['GOD_TEST']} God Test Detected: {gt['label']} calls too many source functions.")
                 
     print()
+
+    if json_out:
+        out_payload = {
+            "score": score,
+            "threshold": threshold,
+            "passed": score >= threshold,
+            "requirements": results,
+            "orphaned_functions": [fn["label"] for fn in orphaned_funcs],
+            "god_tests": [gt["label"] for gt in god_tests]
+        }
+        Path(json_out).write_text(json.dumps(out_payload, indent=2))
+        print(f"Validation matrix written to {json_out}")
 
     if score < threshold:
         print(f"FAIL: score {score}% is below threshold {threshold}%")

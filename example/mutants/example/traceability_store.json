@@ -2,7 +2,7 @@
   "tests": {
     "tests/test_calculator.py::test_add_positive": {
       "outcome": "failed",
-      "duration": 6.5833970438689e-05,
+      "duration": 6.733299233019352e-05,
       "requirement_ids": [
         "REQ-201"
       ],
@@ -10,8 +10,8 @@
       "is_weak": false
     },
     "tests/test_calculator.py::test_add_negative": {
-      "outcome": "failed",
-      "duration": 0.0006475000409409404,
+      "outcome": "passed",
+      "duration": 4.162505501881242e-05,
       "requirement_ids": [
         "REQ-201"
       ],
@@ -20,7 +20,25 @@
     },
     "tests/test_calculator.py::test_divide_by_zero_raises": {
       "outcome": "passed",
-      "duration": 0.00023608299670740962,
+      "duration": 7.554196054115891e-05,
+      "requirement_ids": [
+        "REQ-202"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "tests/test_calculator.py::test_multiply_positive": {
+      "outcome": "passed",
+      "duration": 3.9375037886202335e-05,
+      "requirement_ids": [
+        "REQ-203"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "tests/test_calculator.py::test_divide_normal": {
+      "outcome": "passed",
+      "duration": 3.783300053328276e-05,
       "requirement_ids": [
         "REQ-202"
       ],

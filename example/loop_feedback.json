@@ -1,0 +1,44 @@
+{
+  "score": 100.0,
+  "threshold": 100.0,
+  "passed": true,
+  "requirements": {
+    "REQ-201": {
+      "status": "VERIFIED",
+      "description": "Addition must return the correct sum of two integers",
+      "test_count": 2,
+      "covered_artifacts": [
+        "add()"
+      ],
+      "tests": [
+        "example/tests/test_calculator.py::test_add_positive",
+        "example/tests/test_calculator.py::test_add_negative"
+      ]
+    },
+    "REQ-202": {
+      "status": "VERIFIED",
+      "description": "Division by zero must raise ValueError",
+      "test_count": 2,
+      "covered_artifacts": [
+        "divide()"
+      ],
+      "tests": [
+        "example/tests/test_calculator.py::test_divide_by_zero_raises",
+        "example/tests/test_calculator.py::test_divide_normal"
+      ]
+    },
+    "REQ-203": {
+      "status": "VERIFIED",
+      "description": "Multiplication must return the correct product",
+      "test_count": 1,
+      "covered_artifacts": [
+        "multiply()"
+      ],
+      "tests": [
+        "example/tests/test_calculator.py::test_multiply_positive"
+      ]
+    }
+  },
+  "orphaned_functions": [],
+  "god_tests": []
+}
