@@ -1,38 +1,65 @@
 import json
-import sqlite3
 from pathlib import Path
 from typing import List, Dict
 
 
-def load_survivors_from_db(db_path: str) -> List[Dict]:
-    """Read surviving mutants from mutmut's SQLite cache."""
-    conn = sqlite3.connect(db_path)
-    rows = conn.execute(
-        "SELECT id, filename, line_number FROM mutant WHERE status='survived'"
-    ).fetchall()
-    conn.close()
-    return [{"mutant_id": r[0], "filename": r[1], "line": r[2]} for r in rows]
+def load_survivors_from_meta(meta_dir: str = "mutants") -> List[Dict]:
+    """Read surviving mutants from mutmut 3.x .meta files."""
+    survivors = []
+    base_path = Path(meta_dir)
+    
+    if not base_path.exists():
+        return survivors
+
+    for meta_file in base_path.rglob("*.meta"):
+        # The mutated filename can be derived from the meta file path
+        # e.g. mutants/src/calculator.py.meta -> src/calculator.py
+        rel_path = meta_file.relative_to(base_path)
+        original_filename = str(rel_path)[:-5] # remove .meta
+
+        with open(meta_file) as f:
+            meta = json.load(f)
+            
+        exit_codes = meta.get("exit_code_by_key", {})
+        for mutant_key, exit_code in exit_codes.items():
+            # In mutmut 3, exit_code == 0 means the mutant SURVIVED (test passed)
+            # exit_code > 0 (usually 1) means the mutant was KILLED (test failed)
+            if exit_code == 0:
+                survivors.append({
+                    "mutant_id": mutant_key,
+                    "filename": original_filename,
+                    "line": 0 # Mutmut 3 abstracts away line numbers in meta files, so we map by file/function
+                })
+    return survivors
 
 
 def build_weak_test_map(survivors: List[Dict], coverage: Dict) -> Dict:
     """
-    For each survivor, find which test functions covered that line.
-    A test covering a mutated line but not killing the mutant = weak test.
+    For each survivor, find which test functions covered the mutated file.
+    A test covering a mutated file but not killing the mutant = weak test.
+    Note: Due to mutmut 3's AST-based approach, line numbers are abstracted,
+    so we flag tests that cover the file containing the survivor.
     """
     weak_map = {}
+    
+    # Pre-compute which tests touch which files
+    tests_by_file = {}
+    for file_key, file_data in coverage.get("files", {}).items():
+        tests_touching_file = set()
+        for contexts in file_data.get("contexts", {}).values():
+            tests_touching_file.update(contexts)
+        tests_by_file[file_key] = tests_touching_file
+
     for s in survivors:
         file_key = s["filename"].lstrip("./")
-        contexts = (
-            coverage.get("files", {})
-            .get(file_key, {})
-            .get("contexts", {})
-            .get(str(s["line"]), [])
-        )
+        contexts = tests_by_file.get(file_key, [])
+        
         for test_name in contexts:
             if test_name not in weak_map:
                 weak_map[test_name] = {"surviving_mutants": 0, "mutant_ids": []}
             weak_map[test_name]["surviving_mutants"] += 1
             weak_map[test_name]["mutant_ids"].append(s["mutant_id"])
+            
     return weak_map
 
 
@@ -51,10 +78,11 @@ def merge_into_traceability(
     p.write_text(json.dumps(store, indent=2))
 
 
-def run(mutmut_db: str, coverage_json: str, store_path: str, output: str):
-    survivors = load_survivors_from_db(mutmut_db)
+def run(meta_dir: str, coverage_json: str, store_path: str, output: str):
+    survivors = load_survivors_from_meta(meta_dir)
     with open(coverage_json) as f:
         coverage = json.load(f)
+        
     weak_map = build_weak_test_map(survivors, coverage)
     scores = {
         k: {
@@ -65,6 +93,7 @@ def run(mutmut_db: str, coverage_json: str, store_path: str, output: str):
     }
     merge_into_traceability(scores, store_path)
     result = {"total_surviving_mutants": len(survivors), "weak_tests": scores}
+    
     with open(output, "w") as f:
         json.dump(result, f, indent=2)
     print(f"Survivors: {len(survivors)} | Weak tests: {len(scores)}")
@@ -74,9 +103,9 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mutmut-db", default=".mutmut-cache/cache")
+    parser.add_argument("--meta-dir", default="mutants", help="Directory containing mutmut 3 .meta files")
     parser.add_argument("--coverage", default="coverage.json")
     parser.add_argument("--store", default="traceability_store.json")
     parser.add_argument("--output", default="mutation_results.json")
     args = parser.parse_args()
-    run(args.mutmut_db, args.coverage, args.store, args.output)
+    run(args.meta_dir, args.coverage, args.store, args.output)

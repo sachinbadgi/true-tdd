@@ -1,0 +1,31 @@
+{
+  "tests": {
+    "tests/test_calculator.py::test_add_positive": {
+      "outcome": "failed",
+      "duration": 6.5833970438689e-05,
+      "requirement_ids": [
+        "REQ-201"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "tests/test_calculator.py::test_add_negative": {
+      "outcome": "failed",
+      "duration": 0.0006475000409409404,
+      "requirement_ids": [
+        "REQ-201"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "tests/test_calculator.py::test_divide_by_zero_raises": {
+      "outcome": "passed",
+      "duration": 0.00023608299670740962,
+      "requirement_ids": [
+        "REQ-202"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+    "tests_by_mangled_function_name": {
+        "calculator.x_add": [
+            "tests/test_calculator.py::test_add_positive",
+            "tests/test_calculator.py::test_add_negative"
+        ],
+        "calculator.x_divide": [
+            "tests/test_calculator.py::test_divide_by_zero_raises"
+        ]
+    },
+    "duration_by_test": {
+        "tests/test_calculator.py::test_add_positive": 0.00043516705045476556,
+        "tests/test_calculator.py::test_add_negative": 0.0001550420420244336,
+        "tests/test_calculator.py::test_divide_by_zero_raises": 0.00019066594541072845
+    },
+    "stats_time": 0.13944100000000004
+}
