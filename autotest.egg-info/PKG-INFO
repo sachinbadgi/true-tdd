@@ -7,3 +7,4 @@ Requires-Dist: coverage
 Requires-Dist: pytest-cov
 Requires-Dist: mutmut
 Requires-Dist: click
+Requires-Dist: watchdog

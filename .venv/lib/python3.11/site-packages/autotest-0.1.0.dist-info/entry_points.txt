@@ -1,2 +1,4 @@
 [console_scripts]
+autotest-hook = autotest.hook:cli
 autotest-report = autotest.report:cli
+autotest-watch = autotest_watch:main
