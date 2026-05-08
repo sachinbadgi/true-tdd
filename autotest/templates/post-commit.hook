@@ -60,6 +60,8 @@ echo ""
 echo "▶ [2/3] Running test suite..."
 AUTOTEST_PROJECT_DIR=$(dirname "$AUTOTEST_STORE")
 COVERAGE_FILE="$AUTOTEST_PROJECT_DIR/coverage.json"
+# Clean pycache to prevent mutants/__pycache__ test-module collision
+find "$AUTOTEST_PROJECT_DIR" -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 (cd "$AUTOTEST_PROJECT_DIR" && \
   PYTHONPATH="$REPO_ROOT" $PYTHON -m pytest \
     --cov="$AUTOTEST_SRC" \
