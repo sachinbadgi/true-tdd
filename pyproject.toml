@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autotest"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["pytest", "coverage", "pytest-cov", "mutmut", "click"]
+
+[project.scripts]
+autotest-report = "autotest.report:cli"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["requirement: REQ-ID this test validates"]
+
+[tool.mutmut]
+mutate_only_covered_lines = true
+
+[tool.coverage.run]
+dynamic_context = "test_function"
