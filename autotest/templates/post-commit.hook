@@ -15,9 +15,8 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
 # ── Detect virtual environment ──────────────────────────────────
-if [ -d ".venv/bin" ]; then
-  PYTHON=".venv/bin/python"
-  PIP=".venv/bin/pip"
+if [ -d "$REPO_ROOT/.venv/bin" ]; then
+  PYTHON="$REPO_ROOT/.venv/bin/python"
 else
   PYTHON="python3"
 fi
