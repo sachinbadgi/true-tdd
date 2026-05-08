@@ -106,7 +106,7 @@
       "label": "_traceability_plugin()",
       "file_type": "code",
       "source_file": "example/tests/conftest.py",
-      "source_location": "L9",
+      "source_location": "L13",
       "id": "tests_conftest_traceability_plugin",
       "community": 1,
       "norm_label": "_traceability_plugin()"

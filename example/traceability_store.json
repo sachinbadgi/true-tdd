@@ -1,0 +1,49 @@
+{
+  "tests": {
+    "example/tests/test_calculator.py::test_add_positive": {
+      "outcome": "passed",
+      "duration": 0.00017579103587195277,
+      "requirement_ids": [
+        "REQ-201"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "example/tests/test_calculator.py::test_add_negative": {
+      "outcome": "passed",
+      "duration": 0.00013983296230435371,
+      "requirement_ids": [
+        "REQ-201"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "example/tests/test_calculator.py::test_divide_by_zero_raises": {
+      "outcome": "passed",
+      "duration": 0.00036279199412092566,
+      "requirement_ids": [
+        "REQ-202"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "example/tests/test_calculator.py::test_multiply_positive": {
+      "outcome": "passed",
+      "duration": 0.00018350000027567148,
+      "requirement_ids": [
+        "REQ-203"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    },
+    "example/tests/test_calculator.py::test_divide_normal": {
+      "outcome": "passed",
+      "duration": 9.433296509087086e-05,
+      "requirement_ids": [
+        "REQ-202"
+      ],
+      "surviving_mutants_count": 0,
+      "is_weak": false
+    }
+  }
+}
