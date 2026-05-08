@@ -1,0 +1,2 @@
+[console_scripts]
+autotest-report = autotest.report:cli

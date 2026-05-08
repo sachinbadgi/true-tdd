@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: autotest
+Version: 0.1.0
+Requires-Python: >=3.10
+Requires-Dist: pytest
+Requires-Dist: coverage
+Requires-Dist: pytest-cov
+Requires-Dist: mutmut
+Requires-Dist: click
