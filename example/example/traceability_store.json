@@ -2,7 +2,7 @@
   "tests": {
     "example/tests/test_calculator.py::test_add_positive": {
       "outcome": "passed",
-      "duration": 0.00018525001360103488,
+      "duration": 5.7333032600581646e-05,
       "requirement_ids": [
         "REQ-201"
       ],
@@ -11,7 +11,7 @@
     },
     "example/tests/test_calculator.py::test_add_negative": {
       "outcome": "passed",
-      "duration": 0.0001010000123642385,
+      "duration": 4.920799983665347e-05,
       "requirement_ids": [
         "REQ-201"
       ],
@@ -20,7 +20,7 @@
     },
     "example/tests/test_calculator.py::test_divide_by_zero_raises": {
       "outcome": "passed",
-      "duration": 0.000329374975990504,
+      "duration": 5.6500022765249014e-05,
       "requirement_ids": [
         "REQ-202"
       ],
@@ -29,7 +29,7 @@
     },
     "example/tests/test_calculator.py::test_multiply_positive": {
       "outcome": "passed",
-      "duration": 9.062502067536116e-05,
+      "duration": 3.8959027733653784e-05,
       "requirement_ids": [
         "REQ-203"
       ],
@@ -38,7 +38,7 @@
     },
     "example/tests/test_calculator.py::test_divide_normal": {
       "outcome": "passed",
-      "duration": 8.754199370741844e-05,
+      "duration": 3.7167046684771776e-05,
       "requirement_ids": [
         "REQ-202"
       ],
