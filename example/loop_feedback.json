@@ -6,36 +6,58 @@
     "REQ-201": {
       "status": "VERIFIED",
       "description": "Addition must return the correct sum of two integers",
-      "test_count": 2,
+      "test_count": 6,
       "covered_artifacts": [
         "add()"
       ],
       "tests": [
         "example/tests/test_calculator.py::test_add_positive",
-        "example/tests/test_calculator.py::test_add_negative"
+        "example/tests/test_calculator.py::test_add_negative",
+        "test_calculator.py::test_add_positive",
+        "test_calculator.py::test_add_negative",
+        "tests/test_calculator.py::test_add_positive",
+        "tests/test_calculator.py::test_add_negative"
       ]
     },
     "REQ-202": {
       "status": "VERIFIED",
       "description": "Division by zero must raise ValueError",
-      "test_count": 2,
+      "test_count": 6,
       "covered_artifacts": [
         "divide()"
       ],
       "tests": [
         "example/tests/test_calculator.py::test_divide_by_zero_raises",
-        "example/tests/test_calculator.py::test_divide_normal"
+        "example/tests/test_calculator.py::test_divide_normal",
+        "test_calculator.py::test_divide_by_zero_raises",
+        "test_calculator.py::test_divide_normal",
+        "tests/test_calculator.py::test_divide_by_zero_raises",
+        "tests/test_calculator.py::test_divide_normal"
       ]
     },
     "REQ-203": {
       "status": "VERIFIED",
       "description": "Multiplication must return the correct product",
-      "test_count": 1,
+      "test_count": 3,
       "covered_artifacts": [
         "multiply()"
       ],
       "tests": [
-        "example/tests/test_calculator.py::test_multiply_positive"
+        "example/tests/test_calculator.py::test_multiply_positive",
+        "test_calculator.py::test_multiply_positive",
+        "tests/test_calculator.py::test_multiply_positive"
+      ]
+    },
+    "REQ-204": {
+      "status": "VERIFIED",
+      "description": "Subtraction must return the correct difference of two integers",
+      "test_count": 4,
+      "covered_artifacts": [],
+      "tests": [
+        "example/tests/test_calculator.py::test_subtract_positive",
+        "example/tests/test_calculator.py::test_subtract_negative",
+        "tests/test_calculator.py::test_subtract_positive",
+        "tests/test_calculator.py::test_subtract_negative"
       ]
     }
   },

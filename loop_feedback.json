@@ -1,28 +1,47 @@
 {
-  "score": 0.0,
+  "score": 100.0,
   "threshold": 80.0,
-  "passed": false,
+  "passed": true,
   "requirements": {
     "REQ-201": {
-      "status": "UNTESTED",
+      "status": "VERIFIED",
       "description": "Addition must return the correct sum of two integers",
-      "test_count": 0,
-      "covered_artifacts": [],
-      "tests": []
+      "test_count": 4,
+      "covered_artifacts": [
+        "add()"
+      ],
+      "tests": [
+        "example/tests/test_calculator.py::test_add_positive",
+        "example/tests/test_calculator.py::test_add_negative",
+        "test_calculator.py::test_add_positive",
+        "test_calculator.py::test_add_negative"
+      ]
     },
     "REQ-202": {
-      "status": "UNTESTED",
+      "status": "VERIFIED",
       "description": "Division by zero must raise ValueError",
-      "test_count": 0,
-      "covered_artifacts": [],
-      "tests": []
+      "test_count": 4,
+      "covered_artifacts": [
+        "divide()"
+      ],
+      "tests": [
+        "example/tests/test_calculator.py::test_divide_by_zero_raises",
+        "example/tests/test_calculator.py::test_divide_normal",
+        "test_calculator.py::test_divide_by_zero_raises",
+        "test_calculator.py::test_divide_normal"
+      ]
     },
     "REQ-203": {
-      "status": "UNTESTED",
+      "status": "VERIFIED",
       "description": "Multiplication must return the correct product",
-      "test_count": 0,
-      "covered_artifacts": [],
-      "tests": []
+      "test_count": 2,
+      "covered_artifacts": [
+        "multiply()"
+      ],
+      "tests": [
+        "example/tests/test_calculator.py::test_multiply_positive",
+        "test_calculator.py::test_multiply_positive"
+      ]
     }
   },
   "orphaned_functions": [],

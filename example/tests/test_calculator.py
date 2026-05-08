@@ -1,5 +1,5 @@
 import pytest
-from calculator import add, divide, multiply
+from calculator import add, divide, multiply, subtract
 
 @pytest.mark.requirement("REQ-201")
 def test_add_positive():
@@ -21,3 +21,11 @@ def test_multiply_positive():
 @pytest.mark.requirement("REQ-202")
 def test_divide_normal():
     assert divide(10, 2) == 5.0
+
+@pytest.mark.requirement("REQ-204")
+def test_subtract_positive():
+    assert subtract(5, 3) == 2
+
+@pytest.mark.requirement("REQ-204")
+def test_subtract_negative():
+    assert subtract(3, 5) == -2

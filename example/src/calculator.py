@@ -8,3 +8,6 @@ def divide(a: float, b: float) -> float:
 
 def multiply(a: int, b: int) -> int:
     return a * b
+
+def subtract(a: int, b: int) -> int:
+    return a - b
