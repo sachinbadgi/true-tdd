@@ -570,3 +570,59 @@ the project venv.
 | `context.next_mutation` | **Does not exist** — mutmut's hook is filter-only |
 | "Data-Aware Mutations" via mutmut | **Separated** — `ConstraintAwareFuzzer` does data mutations; mutmut does code mutations |
 | PRD headers as REQ-IDs | **Replaced** — rule IDs come from `RuleExtractor` parsing `lk_pattern_constants.py` |
+
+---
+
+## 8. Data-Aware Mutation Testing
+
+Autotest is "data-aware": it can externalize and inject richer test data values during
+mutmut runs to improve mutation kill rates, without permanently modifying test files.
+
+**Design doc:** `docs/plans/2026-05-09-data-aware-design.md`
+
+### 8.1 Implemented: Sidecar YAML + File Rewriter (C1 + Approach A)
+
+A `testdata.yaml` sidecar file (co-located with tests) declares named case sets.
+Before a mutmut run, `autotest-inject prepare` rewrites test files with
+`@pytest.mark.parametrize` injected from the YAML, then restores originals after.
+
+```
+tests/
+├── test_calculator.py       ← original (active during normal dev)
+├── testdata.yaml            ← case sets declared here
+└── .autotest_backup/        ← originals preserved during mutmut run
+    └── test_calculator.py.bak
+```
+
+The sidecar is matched to tests by function name automatically, or explicitly via
+`@pytest.mark.testdata("set_name")` on the test (C2 optional override). The marker
+produces an `EXTRACTED` confidence edge in the Graphify graph — stronger than the
+`INFERRED` proximity edge that would result from co-location alone.
+
+**New reliability status:** `WEAK_DATA` — test passes but has no sidecar cases declared,
+meaning it was only validated against the single hardcoded input. Data coverage gap.
+
+**New files:**
+- `autotest/data_injector.py` — rewriter + `autotest-inject` CLI
+- `example/tests/testdata.yaml` — example sidecar demonstrating the schema
+
+**Graphify traceability:** Graphify's semantic extractor reads `testdata.yaml` naturally.
+Re-running `/graphify` after adding a sidecar adds testdata nodes and edges to the graph
+with zero changes to Graphify itself.
+
+### 8.2 Future Feature: Data Registry / Catalog (not yet built)
+
+Declare test data sets in a **central registry file** rather than per-directory sidecars.
+Cases would be keyed by requirement ID (`REQ-201`) rather than test function name,
+enabling cross-test data sharing at the requirements level. autotest would generate or
+parameterize pytest cases from the registry automatically during any pytest invocation,
+not just mutmut runs.
+
+### 8.3 Future Feature: Mutation-Aware Data Advisor (not yet built)
+
+After a mutant survives, analyze *why* the test data was insufficient. The advisor would
+compare the mutated operator (e.g. `+` → `-`) against the input values in the sidecar
+to determine if any existing case would have exposed the fault. If not, it generates
+targeted boundary values (zero, symmetric, identity, large magnitude) and appends them
+to `testdata.yaml` as suggestions. Output: annotated YAML diff showing which cases to
+add and which mutants they would kill.
