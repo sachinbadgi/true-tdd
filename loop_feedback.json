@@ -1,0 +1,30 @@
+{
+  "score": 0.0,
+  "threshold": 80.0,
+  "passed": false,
+  "requirements": {
+    "REQ-201": {
+      "status": "UNTESTED",
+      "description": "Addition must return the correct sum of two integers",
+      "test_count": 0,
+      "covered_artifacts": [],
+      "tests": []
+    },
+    "REQ-202": {
+      "status": "UNTESTED",
+      "description": "Division by zero must raise ValueError",
+      "test_count": 0,
+      "covered_artifacts": [],
+      "tests": []
+    },
+    "REQ-203": {
+      "status": "UNTESTED",
+      "description": "Multiplication must return the correct product",
+      "test_count": 0,
+      "covered_artifacts": [],
+      "tests": []
+    }
+  },
+  "orphaned_functions": [],
+  "god_tests": []
+}

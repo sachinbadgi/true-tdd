@@ -59,15 +59,20 @@ fi
 # ── Step 2: Run tests with coverage ────────────────────────────
 echo ""
 echo "▶ [2/3] Running test suite..."
-if [ -f "${AUTOTEST_STORE%/*}/pytest.ini" ] || [ -f "pyproject.toml" ]; then
-  COVERAGE_FILE=$(dirname "$AUTOTEST_STORE")/coverage.json
-  $PYTHON -m pytest \
+AUTOTEST_PROJECT_DIR=$(dirname "$AUTOTEST_STORE")
+COVERAGE_FILE="$AUTOTEST_PROJECT_DIR/coverage.json"
+(cd "$AUTOTEST_PROJECT_DIR" && \
+  PYTHONPATH="$REPO_ROOT" $PYTHON -m pytest \
     --cov="$AUTOTEST_SRC" \
     --cov-context=test \
-    --cov-report=json:"$COVERAGE_FILE" \
-    -q --tb=short 2>&1 | tail -5
-else
-  echo "  ⚠️  No pytest config found — skipping test run"
+    --cov-report=json:coverage.json \
+    -q --tb=short 2>&1 | tail -5)
+# Bridge mutation results
+if [ -d "$AUTOTEST_PROJECT_DIR/mutants" ]; then
+  (cd "$AUTOTEST_PROJECT_DIR" && \
+    PYTHONPATH="$REPO_ROOT" $PYTHON -m autotest.mutation_bridge \
+      --meta-dir mutants --coverage coverage.json \
+      --store traceability_store.json --output mutation_results.json 2>&1 | tail -1)
 fi
 
 # ── Step 3: Run autotest reliability report ─────────────────────
