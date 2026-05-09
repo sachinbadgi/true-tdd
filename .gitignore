@@ -43,6 +43,10 @@ mutants/
 .vscode/
 *.swp
 
+# macOS Finder duplicates (e.g. "file 2.py" created when duplicating files)
+* 2.*
+* 2
+
 # Coverage / test artifacts (project-level, not framework source)
 .coverage
 coverage.xml

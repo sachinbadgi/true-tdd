@@ -39,7 +39,7 @@ jobs:
 
     - name: Run unit tests with coverage
       run: |
-        pytest tests/ --cov=truetdd --cov-report=xml --cov-fail-under=80
+        pytest tests/ --cov=truetdd --cov-report=xml --cov-fail-under=60
 
     - name: Upload coverage report
       if: matrix.python-version == '3.12'

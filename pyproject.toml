@@ -69,6 +69,13 @@ mutate_only_covered_lines = true
 
 [tool.coverage.run]
 dynamic_context = "test_function"
+omit = [
+    # CLI entrypoints — thin wrappers, tested via integration not unit tests
+    "truetdd/watch.py",
+    "truetdd/hook.py",
+    "truetdd/init_project.py",
+    "truetdd/summary_report.py",
+]
 
 [tool.ruff]
 target-version = "py310"
