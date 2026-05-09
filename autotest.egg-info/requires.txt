@@ -1,6 +1,0 @@
-pytest
-coverage
-pytest-cov
-mutmut
-click
-watchdog

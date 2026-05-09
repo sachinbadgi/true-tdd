@@ -42,3 +42,23 @@ mutants/
 .idea/
 .vscode/
 *.swp
+
+# Coverage / test artifacts (project-level, not framework source)
+.coverage
+coverage.xml
+
+# Graphify generated output (consumer projects only — not the framework itself)
+graphify-out/
+
+# Old autotest package (renamed to truetdd)
+autotest/
+autotest.egg-info/
+autotest.cfg
+autotest-concept.md
+autotest_watch.py
+
+# Example project generated state
+example/
+
+# Internal planning docs (not for public consumption)
+docs/plans/
