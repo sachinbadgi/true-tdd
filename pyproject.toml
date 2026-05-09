@@ -59,6 +59,7 @@ truetdd-delta    = "truetdd.delta_manager:cli"
 truetdd-sync     = "truetdd.graph_sync:cli"
 truetdd-bridge   = "truetdd.mutation_bridge:cli"
 truetdd-watch    = "truetdd.watch:cli"
+truetdd-apply    = "truetdd.apply:cli"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

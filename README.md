@@ -80,7 +80,7 @@ your-project/
 └── setup.cfg                  ← mutmut + pytest + coverage config
 ```
 
-Options: `truetdd-init --src src --tests tests --project /path/to/project`
+Options: `truetdd-init --project /path/to/project --force`
 
 ### Step 1 — Tag your PRD
 
@@ -267,8 +267,9 @@ def test_add_with_shared_cases():
 ### Minimal pipeline (no data injection)
 
 ```bash
-pytest --cov=src --cov-context=test --cov-report=json
-mutmut run --paths-to-mutate src/
+eval $(python -m truetdd.discovery)
+pytest --cov=. --cov-omit="$TEST_FILES" --cov-context=test --cov-report=json
+mutmut run --paths-to-mutate "$SRC_FILES"
 python -m truetdd.mutation_bridge \
   --meta-dir mutants --coverage coverage.json \
   --store traceability_store.json --output mutation_results.json
@@ -278,23 +279,29 @@ truetdd-report --prd prd.md --store traceability_store.json
 ### Full pipeline (with data-aware injection)
 
 ```bash
-# Step 1: Baseline coverage
-pytest --cov=src --cov-context=test --cov-report=json
+# Step 1: Discover files
+eval $(python -m truetdd.discovery)
 
-# Step 2: Inject richer test data
-truetdd-inject prepare --tests tests/ --testdata tests/testdata.yaml
+# Step 2: Baseline coverage
+pytest --cov=. --cov-omit="$TEST_FILES" --cov-context=test --cov-report=json
 
-# Step 3: Run mutmut against augmented tests
-mutmut run --paths-to-mutate src/
+# Step 3: Inject richer test data
+truetdd-inject prepare --tests "$TEST_FILES" --testdata testdata.yaml
 
-# Step 4: Restore originals + bridge results
-truetdd-inject restore --tests tests/
+# Step 4: Run mutmut against augmented tests
+mutmut run --paths-to-mutate "$SRC_FILES"
+
+# Step 5: Restore originals + bridge results
+truetdd-inject restore --tests "$TEST_FILES"
 python -m truetdd.mutation_bridge \
   --meta-dir mutants --coverage coverage.json \
   --store traceability_store.json --output mutation_results.json
 
-# Step 5: Generate data-aware reliability report
+# Step 6: Generate data-aware reliability report
 truetdd-report --prd prd.md --store traceability_store.json --threshold 80
+
+# Step 7: Auto-apply suggested testdata
+truetdd-apply --feedback loop_feedback.json --testdata testdata.yaml
 ```
 
 ### With Graphify structural analysis (optional)
@@ -348,7 +355,7 @@ For every `WEAK_DATA` requirement, True TDD auto-generates ready-to-paste testda
 }
 ```
 
-The LLM fills in `???` values (trivially computable) and pastes into `testdata.yaml`. No reasoning required.
+The framework automatically applies these stubs to `testdata.yaml` via the `truetdd-apply` command. The LLM simply needs to fill in the `???` values natively in the file. No YAML reasoning required.
 
 ---
 
@@ -423,6 +430,7 @@ AUTOTEST_INJECT="1"                        # set 0 to disable data injection
 | `truetdd-hook status` | Check hook installation |
 | `truetdd-inject prepare` | Backup + augment test files with testdata |
 | `truetdd-inject restore` | Restore original test files from backup |
+| `truetdd-apply` | Automatically merge generated testdata stubs into testdata.yaml |
 
 ```
 truetdd-report --help

@@ -101,12 +101,20 @@ print(f"   📸 Phase snapshot: {name}")
 PYEOF
 }
 
+# ── Discover Source and Test Files ───────────────────────────
+echo ""
+echo "=== Discovering Source & Test Files ==="
+eval $("$PY" -m truetdd.discovery)
+echo "Discovered SRC_FILES: $SRC_FILES"
+echo "Discovered TEST_FILES: $TEST_FILES"
+
 # ── Run pytest and capture pass count ─────────────────────────
 run_pytest() {
   local extra_args="$*"
   # Run pytest with JSON report for test counts
   "$PY" -m pytest \
-    --cov=src \
+    --cov=. \
+    --cov-omit="$TEST_FILES" \
     --cov-report=json:coverage.json \
     --cov-report=term-missing \
     -q $extra_args 2>&1 | tee /tmp/pytest_out.txt
@@ -151,15 +159,15 @@ echo "=== 3. Mutation testing ==="
 
 if [[ -f truetdd_delta.txt ]]; then
   if [ -s truetdd_delta.txt ]; then
-    DELTA_FILES=$(tr '\n' ' ' < truetdd_delta.txt)
+    DELTA_FILES=$(tr '\n' ',' < truetdd_delta.txt | sed 's/,$//')
     echo "⚡ Targeting mutations only on changed files: $DELTA_FILES"
-    mutmut run --paths-to-mutate $DELTA_FILES > /dev/null 2>&1 || true
+    mutmut run --paths-to-mutate "$DELTA_FILES" > /dev/null 2>&1 || true
   else
     echo "⚡ No source files changed since last run. Skipping mutmut."
   fi
 else
-  echo "Running full mutation suite..."
-  mutmut run > /dev/null 2>&1 || true
+  echo "Running full mutation suite on discovered source files..."
+  mutmut run --paths-to-mutate "$SRC_FILES" > /dev/null 2>&1 || true
 fi
 
 echo "=== 3b. mutation_bridge (reading results) ==="
@@ -169,7 +177,7 @@ echo "=== 3b. mutation_bridge (reading results) ==="
   --coverage coverage.json \
   --store traceability_store.json \
   --output mutation_results.json \
-  --testdata tests/testdata.yaml
+  --testdata testdata.yaml
 
 add_phase "3. + Mutation testing"
 
@@ -183,6 +191,15 @@ echo "=== 4. truetdd-report (reliability gate) ==="
   --json-out loop_feedback.json || true
 
 add_phase "4. + truetdd-report"
+
+# ── 4b. truetdd-apply (auto-fix WEAK_DATA) ───────────────────
+echo ""
+echo "=== 4b. truetdd-apply ==="
+if [ -s loop_feedback.json ]; then
+  "$PY" -m truetdd.apply \
+    --feedback loop_feedback.json \
+    --testdata testdata.yaml || true
+fi
 
 # ── 5. Final summary with phase progression ───────────────────
 echo ""

@@ -41,9 +41,9 @@ def _ensure_executable(path: Path) -> None:
     path.chmod(current | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
-def _write_setup_cfg(project: Path, src_dir: str, tests_dir: str) -> bool:
+def _write_setup_cfg(project: Path) -> bool:
     """
-    Write setup.cfg with the minimal mutmut + pytest + coverage config needed
+    Write setup.cfg with the minimal pytest + coverage config needed
     by run_pipeline.sh. Does not overwrite an existing file.
     """
     cfg_path = project / "setup.cfg"
@@ -51,13 +51,7 @@ def _write_setup_cfg(project: Path, src_dir: str, tests_dir: str) -> bool:
         return False  # Respect existing config
 
     cfg = textwrap.dedent(f"""\
-        [mutmut]
-        paths_to_mutate={src_dir}/
-        tests_dir={tests_dir}/
-        runner=.venv/bin/python -m pytest {tests_dir}/ -x -q
-
         [tool:pytest]
-        testpaths = {tests_dir}
         norecursedirs = mutants .venv __pycache__
         markers =
             requirement: REQ-ID this test validates
@@ -69,9 +63,9 @@ def _write_setup_cfg(project: Path, src_dir: str, tests_dir: str) -> bool:
     return True
 
 
-def _write_conftest(project: Path, tests_dir: str) -> bool:
+def _write_conftest(project: Path) -> bool:
     """Write a conftest.py that activates the truetdd pytest plugin."""
-    conftest = project / tests_dir / "conftest.py"
+    conftest = project / "conftest.py"
     if conftest.exists():
         return False
 
@@ -94,10 +88,8 @@ def _write_conftest(project: Path, tests_dir: str) -> bool:
 
 @click.command()
 @click.option("--project", default=".", show_default=True, help="Path to the project root to initialise.")
-@click.option("--src", default="src", show_default=True, help="Source directory (relative to project root).")
-@click.option("--tests", default="tests", show_default=True, help="Tests directory (relative to project root).")
 @click.option("--force", is_flag=True, default=False, help="Overwrite existing prd.md and testdata.yaml.")
-def cli(project: str, src: str, tests: str, force: bool) -> None:
+def cli(project: str, force: bool) -> None:
     """Bootstrap a project for the truetdd reliability framework.
 
     Creates run_pipeline.sh, prd.md, tests/testdata.yaml, setup.cfg,
@@ -125,29 +117,29 @@ def cli(project: str, src: str, tests: str, force: bool) -> None:
     copied = _copy_template(TEMPLATES / "prd.md", prd_dest, overwrite=force)
     results.append(("✅", "prd.md", "created") if copied else ("⏭️ ", "prd.md", "already exists — skipped"))
 
-    # 3. tests/testdata.yaml
-    td_dest = root / tests / "testdata.yaml"
+    # 3. testdata.yaml
+    td_dest = root / "testdata.yaml"
     copied = _copy_template(TEMPLATES / "testdata.yaml", td_dest, overwrite=force)
     results.append(
-        ("✅", f"{tests}/testdata.yaml", "created")
+        ("✅", "testdata.yaml", "created")
         if copied
-        else ("⏭️ ", f"{tests}/testdata.yaml", "already exists — skipped")
+        else ("⏭️ ", "testdata.yaml", "already exists — skipped")
     )
 
     # 4. setup.cfg
-    cfg_written = _write_setup_cfg(root, src, tests)
+    cfg_written = _write_setup_cfg(root)
     results.append(
-        ("✅", "setup.cfg", f"created (src={src}/, tests={tests}/)")
+        ("✅", "setup.cfg", "created")
         if cfg_written
         else ("⏭️ ", "setup.cfg", "already exists — skipped")
     )
 
     # 5. conftest.py
-    conftest_written = _write_conftest(root, tests)
+    conftest_written = _write_conftest(root)
     results.append(
-        ("✅", f"{tests}/conftest.py", "created")
+        ("✅", "conftest.py", "created")
         if conftest_written
-        else ("⏭️ ", f"{tests}/conftest.py", "already exists — skipped")
+        else ("⏭️ ", "conftest.py", "already exists — skipped")
     )
 
     # Print results

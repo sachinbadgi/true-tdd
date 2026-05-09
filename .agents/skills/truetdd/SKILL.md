@@ -59,6 +59,7 @@ Read `loop_feedback.json`. It tells you exactly what is wrong:
 |--------|---------|--------|
 | `UNTESTED` | Requirement has no tagged test | Write failing test with `@pytest.mark.requirement` |
 | `WEAK` | Test passes but mutants survive | Strengthen assertions |
+| `WEAK_DATA` | Passing test but no boundary testdata | Fill in `???` in the auto-applied `testdata.yaml` |
 | `FAILING` | Test exists but breaks | Fix source code |
 | `UNTRACEABLE` in `orphaned_functions` | Code with no structural test caller | Write test that calls it, tag to correct REQ |
 
@@ -124,6 +125,7 @@ Outputs to read:
 | `"score": 100.0, "passed": true` | ✅ COMPLETE | Commit and move to next requirement |
 | `"orphaned_functions": ["fn()"]` | 👻 Code exists with no test caller | Your test didn't structurally call the function — fix the import or function name |
 | `"status": "WEAK"` for your REQ | ⚠️ Mutants survived | Strengthen assertions (see below) |
+| `"status": "WEAK_DATA"` for your REQ | 📊 Missing boundary cases | Fill in `???` in `testdata.yaml` (stubs are auto-applied) |
 | Other REQ scores dropped | Regression | You broke something — fix before proceeding |
 
 ### Fixing Semantic Gaps (WEAK status)
@@ -146,6 +148,10 @@ def test_multiply_various():
     assert multiply(-2, 5) == -10
     assert multiply(0, 100) == 0
 ```
+
+### Fixing Data Gaps (WEAK_DATA status)
+
+When `WEAK_DATA` is flagged, True TDD generates testdata boundary stubs and automatically applies them to `testdata.yaml` using `truetdd-apply`. You just need to open `testdata.yaml`, find the `???` values for the expected results, and fill them in with the correct deterministic answers.
 
 ### Step 4: REFACTOR
 
