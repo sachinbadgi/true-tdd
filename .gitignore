@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Generated pipeline artifacts (project-specific, not part of the framework)
+graphify-out/
+traceability_store.json
+coverage.json
+mutation_results.json
+loop_feedback.json
+discovery_suggestions.json
+summary.json
+phases.json
+pytest_results.json
+reliability_report.md
+truetdd_delta.txt
+injected_sets.json
+
+# mutmut
+.mutmut-cache
+mutants/
+
+# truetdd inject backup
+.truetdd_backup/
+.truetdd_lock
+
+# IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp

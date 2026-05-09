@@ -1,0 +1,31 @@
+# testdata.yaml — Boundary case declarations for truetdd-inject
+#
+# Structure:
+#   cases:
+#     <test_function_name>:
+#       cases:
+#         - <param1>: <value>
+#           <param2>: <value>
+#           expected: <value>
+#
+# The injector reads this file and parametrizes matching test functions
+# before mutmut runs, then restores originals after.
+#
+# Rules:
+#   - Keys under each case map to parameter names in the test function
+#   - Do NOT include '_comment' keys — injector treats all keys as params
+#   - 'expected' is the special RHS value that replaces the assert constant
+
+cases: {}
+  # example:
+  #   test_add_positive:
+  #     cases:
+  #       - a: 2
+  #         b: 3
+  #         expected: 5
+  #       - a: 0
+  #         b: 0
+  #         expected: 0
+  #       - a: -1
+  #         b: 1
+  #         expected: 0

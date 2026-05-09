@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # Keep GitHub Actions up-to-date
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+
+  # Keep Python dependencies up-to-date
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+    # Only create PRs for security updates on direct deps
+    open-pull-requests-limit: 5

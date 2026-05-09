@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:   # allow manual runs from the GitHub UI
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'   # cache pip downloads to speed up installs
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]"
+
+    - name: Check code formatting and linting
+      run: |
+        ruff check truetdd tests
+        ruff format --check truetdd tests
+
+    - name: Run type checks
+      run: |
+        mypy truetdd tests
+
+    - name: Run unit tests with coverage
+      run: |
+        pytest tests/ --cov=truetdd --cov-report=xml --cov-fail-under=80
+
+    - name: Upload coverage report
+      if: matrix.python-version == '3.12'
+      uses: codecov/codecov-action@v4
+      with:
+        files: coverage.xml
+        fail_ci_if_error: false

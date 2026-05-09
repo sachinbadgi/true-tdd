@@ -3,18 +3,62 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["autotest*"]
+include = ["truetdd*"]
+
+[tool.setuptools.package-data]
+truetdd = ["templates/*"]
 
 [project]
-name = "autotest"
-version = "0.1.0"
+name = "true-tdd"
+version = "0.2.0"
 requires-python = ">=3.10"
-dependencies = ["pytest", "coverage", "pytest-cov", "mutmut", "click", "watchdog"]
+description = "True TDD: AI-driven functional test coverage with deterministic reliability gates"
+license = { text = "MIT" }
+keywords = ["tdd", "testing", "mutation-testing", "reliability", "traceability"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Testing",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "pytest>=7.4",
+    "coverage[toml]>=7.0",
+    "pytest-cov>=4.0",
+    "mutmut>=2.0,<4",
+    "click>=8.0",
+    "pyyaml>=6.0",
+    "watchdog>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "types-PyYAML",
+]
+
+[project.urls]
+Homepage = "https://github.com/truetdd/true-tdd"
+Repository = "https://github.com/truetdd/true-tdd"
+"Bug Tracker" = "https://github.com/truetdd/true-tdd/issues"
+Changelog = "https://github.com/truetdd/true-tdd/blob/main/CHANGELOG.md"
 
 [project.scripts]
-autotest-report = "autotest.report:cli"
-autotest-hook = "autotest.hook:cli"
-autotest-watch = "autotest_watch:main"
+truetdd-init     = "truetdd.init_project:cli"
+truetdd-report   = "truetdd.report:cli"
+truetdd-summary  = "truetdd.summary_report:cli"
+truetdd-hook     = "truetdd.hook:cli"
+truetdd-inject   = "truetdd.data_injector:cli"
+truetdd-discover = "truetdd.correlator:cli"
+truetdd-delta    = "truetdd.delta_manager:cli"
+truetdd-sync     = "truetdd.graph_sync:cli"
+truetdd-bridge   = "truetdd.mutation_bridge:cli"
+truetdd-watch    = "truetdd.watch:cli"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -25,3 +69,20 @@ mutate_only_covered_lines = true
 
 [tool.coverage.run]
 dynamic_context = "test_function"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]  # long lines accepted in CLI help strings and report formatting
+# UP (pyupgrade) and B (bugbear) are recommended additions for future cleanup
+# but are excluded from this initial config to avoid mass-touch of existing code.
+
+[tool.mypy]
+python_version = "3.10"
+strict = false
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_ignores = true
