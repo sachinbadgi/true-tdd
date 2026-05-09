@@ -11,10 +11,10 @@ Usage:
 
 import json
 from pathlib import Path
+from typing import Any
 
 import click
 import yaml
-from typing import Any
 
 
 @click.command()
