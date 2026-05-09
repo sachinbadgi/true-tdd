@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────
+#  truetdd post-commit gate
+#  Injected by `graphify hook install` and extended by truetdd.
+#  Fires on every `git commit`:
+#   1. graphify update — rebuilds graph.json from changed code
+#   2. pytest          — runs tests, captures traceability + coverage  
+#   3. truetdd report — evaluates 3-tier reliability score
+#  If score < threshold, the commit still succeeds but outputs a
+#  RELIABILITY GATE WARNING so the developer knows work remains.
+# ─────────────────────────────────────────────────────────────────
+set -e
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# ── Detect virtual environment ──────────────────────────────────
+if [ -d "$REPO_ROOT/.venv/bin" ]; then
+  PYTHON="$REPO_ROOT/.venv/bin/python"
+else
+  PYTHON="python3"
+fi
+
+# ── Detect project config ───────────────────────────────────────
+# Look for truetdd.cfg or fall back to sensible defaults
+AUTOTEST_CFG="truetdd.cfg"
+if [ -f "$AUTOTEST_CFG" ]; then
+  source "$AUTOTEST_CFG"
+else
+  AUTOTEST_PRD="${AUTOTEST_PRD:-prd.md}"
+  AUTOTEST_SRC="${AUTOTEST_SRC:-src}"
+  AUTOTEST_STORE="${AUTOTEST_STORE:-traceability_store.json}"
+  AUTOTEST_GRAPH="${AUTOTEST_GRAPH:-graphify-out/graph.json}"
+  AUTOTEST_THRESHOLD="${AUTOTEST_THRESHOLD:-80}"
+  AUTOTEST_ENABLED="${AUTOTEST_ENABLED:-1}"
+fi
+
+# Allow opt-out via env
+if [ "${AUTOTEST_ENABLED}" = "0" ] || [ "${SKIP_AUTOTEST}" = "1" ]; then
+  echo "[truetdd] Skipped (AUTOTEST_ENABLED=0 or SKIP_AUTOTEST=1)"
+  exit 0
+fi
+
+echo ""
+echo "╔══════════════════════════════════════════════════════════╗"
+echo "║         truetdd · post-commit reliability gate          ║"
+echo "╚══════════════════════════════════════════════════════════╝"
+
+# ── Step 1: Update graph with changed files ─────────────────────
+echo ""
+echo "▶ [1/3] Updating structural graph..."
+if command -v graphify &>/dev/null; then
+  graphify update . --force 2>&1 | tail -2
+else
+  echo "  ⚠️  graphify not found — skipping structural update"
+fi
+
+# ── Step 2: Run tests with coverage ────────────────────────────
+echo ""
+echo "▶ [2/3] Running test suite..."
+AUTOTEST_PROJECT_DIR=$(dirname "$AUTOTEST_STORE")
+COVERAGE_FILE="$AUTOTEST_PROJECT_DIR/coverage.json"
+# Clean pycache to prevent mutants/__pycache__ test-module collision
+find "$AUTOTEST_PROJECT_DIR" -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+(cd "$AUTOTEST_PROJECT_DIR" && \
+  PYTHONPATH="$REPO_ROOT" $PYTHON -m pytest tests/ \
+    --rootdir="$AUTOTEST_PROJECT_DIR" \
+    --cov="$AUTOTEST_SRC" \
+    --cov-context=test \
+    --cov-report=json:coverage.json \
+    -q --tb=short 2>&1 | tail -5)
+# Bridge mutation results
+if [ -d "$AUTOTEST_PROJECT_DIR/mutants" ]; then
+  (cd "$AUTOTEST_PROJECT_DIR" && \
+    PYTHONPATH="$REPO_ROOT" $PYTHON -m truetdd.mutation_bridge \
+      --meta-dir mutants --coverage coverage.json \
+      --store traceability_store.json --output mutation_results.json 2>&1 | tail -1)
+fi
+
+# ── Step 3: Run truetdd reliability report ─────────────────────
+echo ""
+echo "▶ [3/3] Computing reliability score..."
+if $PYTHON -m truetdd.report --help &>/dev/null 2>&1; then
+  $PYTHON -m truetdd.report \
+    --prd "$AUTOTEST_PRD" \
+    --store "$AUTOTEST_STORE" \
+    --graph "$AUTOTEST_GRAPH" \
+    --threshold "$AUTOTEST_THRESHOLD" \
+    --json-out loop_feedback.json || true
+
+  # Show the score but never block the commit — dev decides
+  if [ -f "loop_feedback.json" ]; then
+    SCORE=$(python3 -c "import json; d=json.load(open('loop_feedback.json')); print(d['score'])" 2>/dev/null)
+    PASSED=$(python3 -c "import json; d=json.load(open('loop_feedback.json')); print(d['passed'])" 2>/dev/null)
+    if [ "$PASSED" = "True" ]; then
+      echo ""
+      echo "  ✅ Reliability gate PASSED ($SCORE%)"
+    else
+      echo ""
+      echo "  ⚠️  Reliability gate WARNING: $SCORE% (threshold: ${AUTOTEST_THRESHOLD}%)"
+      echo "  Run /truetdd-loop in Antigravity to fix gaps automatically."
+    fi
+  fi
+else
+  echo "  ⚠️  truetdd not installed — pip install -e . in the truetdd repo"
+fi
+
+echo ""

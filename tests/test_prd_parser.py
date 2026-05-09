@@ -1,5 +1,6 @@
 import textwrap
-from autotest.prd_parser import parse_requirements, parse_prd_file
+
+from truetdd.prd_parser import parse_prd_file, parse_requirements
 
 PRD = textwrap.dedent("""
     # My Product
