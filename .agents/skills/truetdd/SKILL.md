@@ -203,7 +203,7 @@ The spec-reviewer subagent should verify `loop_feedback.json` exists and shows `
 Bootstrap any project with one command:
 
 ```bash
-pip install True TDD           # or: pip install -e /path/to/truetdd
+pip install git+https://github.com/sachinbadgi/true-tdd.git   # or: pip install -e /path/to/truetdd
 truetdd-init                  # creates run_pipeline.sh, prd.md, testdata.yaml, setup.cfg, conftest.py
 ```
 

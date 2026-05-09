@@ -43,7 +43,7 @@ PRD (Markdown)          Test Suite (pytest)
 ## Installation
 
 ```bash
-pip install true-tdd           # or: pip install -e /path/to/truetdd
+pip install git+https://github.com/sachinbadgi/true-tdd.git   # or: pip install -e /path/to/truetdd
 ```
 
 **Python dependencies installed automatically:** `pytest`, `pytest-cov`, `mutmut`, `click`, `pyyaml`, `watchdog`
@@ -64,7 +64,7 @@ uv tool install graphify       # provides the 'graphify' command used by run_pip
 ### Step 0 — Bootstrap your project
 
 ```bash
-pip install true-tdd           # or: pip install -e /path/to/truetdd
+pip install git+https://github.com/sachinbadgi/true-tdd.git   # or: pip install -e /path/to/truetdd
 truetdd-init                  # run inside your project root
 ```
 
@@ -468,7 +468,7 @@ your-project/
 
 ## Adding to an Existing Project
 
-1. `pip install true-tdd` (or `pip install -e /path/to/true-tdd`)
+1. `pip install git+https://github.com/sachinbadgi/true-tdd.git` (or `pip install -e /path/to/true-tdd`)
 2. Run `truetdd-init` in your project root — creates all scaffolding in one step
 3. Edit `prd.md` to add your `REQ-XXX:` requirements
 4. Add `@pytest.mark.requirement("REQ-X")` to your test functions
