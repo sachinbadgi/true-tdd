@@ -14,6 +14,8 @@ from pathlib import Path
 
 import click
 import yaml
+from typing import Any
+
 
 @click.command()
 @click.option("--feedback", required=True, help="Path to loop_feedback.json")
@@ -37,9 +39,9 @@ def cli(feedback: str, testdata: str):
         return
 
     td_path = Path(testdata)
-    
+
     # Load existing testdata if it exists
-    existing_data = {}
+    existing_data: dict[str, Any] = {}
     if td_path.exists():
         try:
             with open(td_path, "r") as f:
@@ -47,7 +49,7 @@ def cli(feedback: str, testdata: str):
         except Exception as e:
             click.echo(f"Failed to parse existing {testdata}: {e}")
             return
-    
+
     if "cases" not in existing_data:
         existing_data["cases"] = {}
 
@@ -57,9 +59,9 @@ def cli(feedback: str, testdata: str):
     for fn_name, stub in suggested.items():
         if fn_name in cases_block:
             continue  # Do not overwrite existing cases
-        
-        # Remove the _note before writing, but we leave _comment keys in the cases 
-        # so the LLM loop can see what they are. 
+
+        # Remove the _note before writing, but we leave _comment keys in the cases
+        # so the LLM loop can see what they are.
         # Actually, the suggester outputs `_comment` inside cases and `_note` at the top level.
         # We can write it as is, and the LLM loop can strip `_comment`.
         cases_block[fn_name] = stub
@@ -73,6 +75,7 @@ def cli(feedback: str, testdata: str):
         click.echo(f"✅ Auto-applied {applied_count} testdata stubs into {testdata}")
     else:
         click.echo("No new testdata stubs were needed.")
+
 
 if __name__ == "__main__":
     cli()

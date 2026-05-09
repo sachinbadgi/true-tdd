@@ -50,7 +50,7 @@ def _write_setup_cfg(project: Path) -> bool:
     if cfg_path.exists():
         return False  # Respect existing config
 
-    cfg = textwrap.dedent(f"""\
+    cfg = textwrap.dedent("""\
         [tool:pytest]
         norecursedirs = mutants .venv __pycache__
         markers =
@@ -121,25 +121,17 @@ def cli(project: str, force: bool) -> None:
     td_dest = root / "testdata.yaml"
     copied = _copy_template(TEMPLATES / "testdata.yaml", td_dest, overwrite=force)
     results.append(
-        ("✅", "testdata.yaml", "created")
-        if copied
-        else ("⏭️ ", "testdata.yaml", "already exists — skipped")
+        ("✅", "testdata.yaml", "created") if copied else ("⏭️ ", "testdata.yaml", "already exists — skipped")
     )
 
     # 4. setup.cfg
     cfg_written = _write_setup_cfg(root)
-    results.append(
-        ("✅", "setup.cfg", "created")
-        if cfg_written
-        else ("⏭️ ", "setup.cfg", "already exists — skipped")
-    )
+    results.append(("✅", "setup.cfg", "created") if cfg_written else ("⏭️ ", "setup.cfg", "already exists — skipped"))
 
     # 5. conftest.py
     conftest_written = _write_conftest(root)
     results.append(
-        ("✅", "conftest.py", "created")
-        if conftest_written
-        else ("⏭️ ", "conftest.py", "already exists — skipped")
+        ("✅", "conftest.py", "created") if conftest_written else ("⏭️ ", "conftest.py", "already exists — skipped")
     )
 
     # Print results
